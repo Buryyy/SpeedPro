@@ -1,5 +1,5 @@
 # SpeedPro Mobile App
-## Tracking free e-scooter application
+## Tracking free e-scooter management application
 
 
 The SpeedPro mobile app will allow to give you to have the same functionality as the chinese LENZOD application to control the electric vehicle. However there are zero user tracking.
