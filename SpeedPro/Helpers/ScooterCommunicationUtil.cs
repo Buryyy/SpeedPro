@@ -5,6 +5,9 @@ namespace SpeedPro.Helpers
 {
     public static class ScooterCommunicationUtil
     {
+        public static readonly Guid CharactericsUUID_1 = Guid.Parse("00008888-0000-1000-8000-00805f9b34fb");
+        public static readonly Guid CharactericsUUID_2 = Guid.Parse("00008877-0000-1000-8000-00805f9b34fb");
+
         public const string CONSTANT_SPEED_OFF = "FF551D010274";
         public const string CONSTANT_SPEED_ON = "FF551D010173";
         public const string ELECT_24V = "FF551B010171";

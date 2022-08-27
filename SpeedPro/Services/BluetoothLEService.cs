@@ -9,9 +9,6 @@ namespace SpeedPro.Services
 {
     public class BluetoothLEService : IBluetoothLEService
     {
-        private readonly string[] PossibleUUIDs = new string[]{ "00008888-0000-1000-8000-00805f9b34fb",
-        "00008877-0000-1000-8000-00805f9b34fb",
-        "00002902-0000-1000-8000-00805f9b34fb"};
 
         private readonly IBluetoothLE _bluetooth;
         private readonly IAdapter _adapter;
@@ -42,17 +39,7 @@ SpeedPro.MainActivity.RequestBlePermissions(SpeedPro.MainActivity.Activity, 0);
             await _adapter.StartScanningForDevicesAsync();
 
         }
-        /**
-         *   public void initData() {
-        versionsModel();
-        this.baseOnBluetoothListener = new BaseOnBluetoothListener() {
-            public void onCharacteristicChanged(BluetoothGatt bluetoothGatt, BluetoothGattCharacteristic bluetoothGattCharacteristic) {
-                BasicInformationActivity.this.analysisBluetooth(CodeFormat.bytesToHexStringTwo(bluetoothGattCharacteristic.getValue(), bluetoothGattCharacteristic.getValue().length));
-            }
-        };
-        QBlueToothManager.getInstance().addBluetoothListener(this.baseOnBluetoothListener);
-    }
-*/
+
         public async Task<bool> ConnectDeviceAsync(IDevice device)
         {
             try
@@ -62,12 +49,10 @@ SpeedPro.MainActivity.RequestBlePermissions(SpeedPro.MainActivity.Activity, 0);
                 var services = await device.GetServicesAsync();
                 ICharacteristic char__1 = null;
                 ICharacteristic char__2 = null;
-                var char1_guid = Guid.Parse("00008888-0000-1000-8000-00805f9b34fb");
-                var char2_guid = Guid.Parse("00008877-0000-1000-8000-00805f9b34fb");
                 foreach (var service in services)
                 {
-                    var characteristic__1 = await service.GetCharacteristicAsync(char1_guid);
-                    var characteristic__2 = await service.GetCharacteristicAsync(char2_guid);
+                    var characteristic__1 = await service.GetCharacteristicAsync(ScooterCommunicationUtil.CharactericsUUID_1);
+                    var characteristic__2 = await service.GetCharacteristicAsync(ScooterCommunicationUtil.CharactericsUUID_2);
 
                     if (characteristic__1 != null)
                     {
