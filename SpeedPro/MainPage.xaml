@@ -14,7 +14,7 @@
                 HeightRequest="200"
                 HorizontalOptions="Center"
                 SemanticProperties.Description="Cute dot net bot waving hi to you!"
-                Source="dotnet_bot.png" />
+                Source="header_image.png" />
 
             <Label
                 FontSize="32"
