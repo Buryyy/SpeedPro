@@ -47,6 +47,7 @@
         <StackLayout Spacing="20" VerticalOptions="EndAndExpand">
             <StackLayout IsVisible="{Binding IsDeviceListVisible}" VerticalOptions="End">
                 <ListView
+                    x:Name="deviceListView"
                     Margin="5"
                     BackgroundColor="#F4EDED"
                     CachingStrategy="RecycleElementAndDataTemplate"
@@ -54,6 +55,8 @@
                     HeightRequest="220"
                     IsPullToRefreshEnabled="False"
                     ItemsSource="{Binding ScannedDevices}"
+                    SelectedItem="{Binding SelectedDevice}"
+                    SelectionMode="Single"
                     SeparatorVisibility="None">
                     <ListView.ItemTemplate>
                         <DataTemplate>

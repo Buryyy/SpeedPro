@@ -1,4 +1,7 @@
-﻿namespace SpeedPro.Helpers
+﻿using System.Diagnostics;
+using System.Text;
+
+namespace SpeedPro.Helpers
 {
     public static class ScooterCommunicationUtil
     {
@@ -48,10 +51,57 @@
             return arr;
         }
 
+        public static string BytesToHexStr(in byte[] bytes, int i)
+        {
+            var builder = new StringBuilder(bytes.Length);
+            for (int i2 = 0; i2 < i; i2++)
+            {
+                String hexString2 = (bytes[i2] & 255).ToString("X4");
+                if (hexString2.Length < 2)
+                {
+                    builder.Append(0);
+                }
+                builder.Append(hexString2.ToUpper());
+            }
+            return builder.ToString();
+        }
+        /*
+           public int analysisData1(String str) {
+        int i = 0;
+        String substring = str.substring(0, str.length() - 2);
+        new StringBuilder();
+        int i2 = 0;
+        while (i <= substring.length() - 1) {
+            int i3 = i + 2;
+            i2 += Integer.valueOf(substring.substring(i, i3), 16).intValue();
+            Log.d("analysisData", "    " + substring + "       " + substring.substring(i, i3));
+            i = i3;
+        }
+        return i2 % 256;
+    }
+        */
+
+        public static int AnalyzedHex(string str)
+        {
+            int i = 0;
+            string substring = str.Substring(0, str.Length - 2);
+            int i2 = 0;
+            while (i <= substring.Length - 1)
+            {
+                int i3 = i + 2;
+                i2 += Convert.ToInt32(str, 16);
+                Debug.WriteLine($"AnalyzeHex: {substring.Substring(i, i3)}");
+                i = i3;
+            }
+            return i2 % 256;
+        }
+
         public static int GetHexVal(char hex)
         {
             int val = (int)hex;
             return val - (val < 58 ? 48 : (val < 97 ? 55 : 87));
         }
+
+        public static readonly sbyte[] ModelNumber = new sbyte[] { -1, 85, 60, 0, 0, 0, 0, 0 };
     }
 }

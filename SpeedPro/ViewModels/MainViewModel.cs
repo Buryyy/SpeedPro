@@ -5,6 +5,7 @@ using Plugin.BLE.Abstractions.EventArgs;
 using SpeedPro.Models;
 using SpeedPro.Services;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Windows.Input;
 
 namespace SpeedPro.ViewModels
@@ -17,14 +18,13 @@ namespace SpeedPro.ViewModels
         {
             _bluetoothLEService = bluetoothLEService;
             CrossBluetoothLE.Current.Adapter.DeviceDiscovered += OnDeviceDiscovered;
-            ScannedDevices = new ObservableCollection<BluetoothDevice>();
+            ScannedDevices = new ObservableCollection<BluetoothLEDevice>();
         }
 
         private void OnDeviceDiscovered(object sender, DeviceEventArgs e)
         {
-            string deviceName = string.IsNullOrEmpty(e.Device.Name) ? "Unnamed device" : e.Device.Name;
-
-            ScannedDevices.Add(new BluetoothDevice(deviceName, e.Device));
+            if (string.IsNullOrEmpty(e.Device.Name)) return;
+            ScannedDevices.Add(new BluetoothLEDevice(e.Device.Name, e.Device));
 
             if (!IsDeviceListVisible)
             {
@@ -44,9 +44,43 @@ namespace SpeedPro.ViewModels
             IsScanningDevices = false;
         });
 
-        [ObservableProperty] bool isScanningDevices;
-        [ObservableProperty] bool showScannedDevices;
-        [ObservableProperty] bool isDeviceListVisible;
-        [ObservableProperty] ObservableCollection<BluetoothDevice> scannedDevices;
+        public void OnDeviceSelected()
+        {
+            if (_selectedDevice is null) return;
+            IsConnectingVehicle = true;
+            Task.Run(async () =>
+            {
+
+                bool isVehicleConnected = await _bluetoothLEService.ConnectDeviceAsync(SelectedDevice.Device);
+                if (isVehicleConnected)
+                {
+                    Debug.WriteLine("Connected to vehicle.");
+                }
+                IsConnectingVehicle = false;
+            });
+        }
+
+        #region Binding Properties
+        [ObservableProperty] bool _isConnectingVehicle;
+        [ObservableProperty] bool _isScanningDevices;
+        [ObservableProperty] bool _isDeviceListVisible;
+
+        [ObservableProperty] ObservableCollection<BluetoothLEDevice> _scannedDevices;
+
+        private BluetoothLEDevice _selectedDevice;
+        public BluetoothLEDevice SelectedDevice
+        {
+            get => _selectedDevice;
+            set
+            {
+                if (!IsConnectingVehicle)
+                {
+                    _selectedDevice = value;
+                    OnDeviceSelected();
+                    OnPropertyChanged();
+                }
+            }
+        }
+        #endregion
     }
 }

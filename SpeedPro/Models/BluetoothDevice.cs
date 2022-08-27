@@ -2,5 +2,5 @@
 
 namespace SpeedPro.Models
 {
-    public record BluetoothDevice(string DisplayName, IDevice Device);
+    public record BluetoothLEDevice(string DisplayName, IDevice Device);
 }

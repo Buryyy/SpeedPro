@@ -4,11 +4,14 @@ namespace SpeedPro;
 
 public partial class MainPage : ContentPage
 {
-
+	private readonly MainViewModel viewModel;
 	public MainPage(MainViewModel viewModel)
 	{
 		InitializeComponent();
-		BindingContext = viewModel;
+		this.viewModel = viewModel;
+		BindingContext = this.viewModel;
 	}
+
+
 }
 
