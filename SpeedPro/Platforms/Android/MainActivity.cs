@@ -31,6 +31,9 @@ public class MainActivity : MauiAppCompatActivity
         Context = this;
         //RequestBlePermissions(this, 0);
         base.OnCreate(savedInstanceState);
+
+
+
     }
 
     public static bool IsBLEAccessGranted()

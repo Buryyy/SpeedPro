@@ -12,18 +12,13 @@ namespace SpeedPro.Services
 
         private readonly IBluetoothLE _bluetooth;
         private readonly IAdapter _adapter;
-        private readonly IList<IDevice> _scannedDevices;
+
 
         public BluetoothLEService()
         {
-            _scannedDevices = new List<IDevice>();
             _bluetooth = CrossBluetoothLE.Current;
             _adapter = CrossBluetoothLE.Current.Adapter;
             _bluetooth.StateChanged += OnStateChanged;
-            _adapter.DeviceDiscovered += (s, a) =>
-            {
-                _scannedDevices.Add(a.Device);
-            };
         }
 
         private void OnStateChanged(object sender, BluetoothStateChangedArgs e)
@@ -34,13 +29,12 @@ namespace SpeedPro.Services
 
         public async Task ScanDevicesAsync()
         {
-
-            _scannedDevices.Clear();
 #if ANDROID
 if(!SpeedPro.MainActivity.IsBLEAccessGranted()) {
 SpeedPro.MainActivity.RequestBlePermissions(SpeedPro.MainActivity.Activity, 0);
 }
 #endif
+
             await _adapter.StartScanningForDevicesAsync();
 
             //await _adapter.DiscoverDeviceAsync(new Guid("00001101-0000-1000-8000-00805F9B34FB"));
@@ -48,7 +42,6 @@ SpeedPro.MainActivity.RequestBlePermissions(SpeedPro.MainActivity.Activity, 0);
 
         ~BluetoothLEService()
         {
-            _adapter.DeviceDiscovered -= (s, a) => _scannedDevices.Add(a.Device);
             _bluetooth.StateChanged -= OnStateChanged;
         }
 

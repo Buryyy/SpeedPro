@@ -2,42 +2,120 @@
 <ContentPage
     x:Class="SpeedPro.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
-
-    <ScrollView>
-        <VerticalStackLayout
-            Padding="30,0"
-            Spacing="25"
-            VerticalOptions="Center">
-
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <StackLayout>
+        <Grid Padding="0,40,0,0" VerticalOptions="Start">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="260" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
             <Image
-                HeightRequest="200"
+                Grid.Row="0"
+                Aspect="AspectFill"
+                HeightRequest="230"
                 HorizontalOptions="Center"
-                SemanticProperties.Description="Cute dot net bot waving hi to you!"
-                Source="header_image.png" />
+                Source="riding_scooter.png"
+                VerticalOptions="Start" />
+            <StackLayout Grid.Row="1">
 
-            <Label
-                FontSize="32"
-                HorizontalOptions="Center"
-                SemanticProperties.HeadingLevel="Level1"
-                Text="Hello, World!" />
+                <Label
+                    FontFamily="Varela"
+                    FontSize="32"
+                    HorizontalOptions="Center"
+                    Text="Welcome to SpeedPro!"
+                    TextColor="#464D77"
+                    VerticalOptions="Center" />
 
-            <Label
-                FontSize="18"
-                HorizontalOptions="Center"
-                SemanticProperties.Description="Welcome to dot net Multi platform App U I"
-                SemanticProperties.HeadingLevel="Level2"
-                Text="Welcome to .NET Multi-platform App UI" />
+                <Label
+                    Margin="0,40,0,0"
+                    FontFamily="Varela"
+                    FontSize="16"
+                    HorizontalOptions="Center"
+                    Text="Before we start, let's connect to the device first."
+                    TextColor="Black"
+                    VerticalOptions="Center" />
+            </StackLayout>
 
-            <Button
-                x:Name="CounterBtn"
-                Clicked="OnCounterClicked"
-                HorizontalOptions="Center"
-                SemanticProperties.Hint="Counts the number of times you click"
-                Text="Click me" />
+        </Grid>
+        <Frame
+            Grid.Row="2"
+            Margin="10"
+            Padding="22"
+            Background="white"
+            VerticalOptions="EndAndExpand">
 
-            <Button Command="{Binding ScanCommand}" Text="Scan" />
-        </VerticalStackLayout>
-    </ScrollView>
+            <StackLayout>
+                <ListView
+                    HasUnevenRows="True"
+                    ItemsSource="{Binding ScannedDevices}"
+                    SeparatorVisibility="None">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Frame
+                                    Margin="2"
+                                    Padding="0"
+                                    CornerRadius="5"
+                                    HeightRequest="40">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="44*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label
+                                            Margin="10,0,0,0"
+                                            FontFamily="Varela"
+                                            FontSize="14"
+                                            Text="{Binding DisplayName}"
+                                            VerticalTextAlignment="Center" />
+                                        <Image
+                                            HeightRequest="32"
+                                            HorizontalOptions="End"
+                                            Source="bluetooth.png"
+                                            WidthRequest="32" />
+                                    </Grid>
+                                </Frame>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <StackLayout
+                    Margin="10"
+                    HorizontalOptions="Center"
+                    IsVisible="{Binding IsScanningDevices}"
+                    Orientation="Horizontal">
+                    <ActivityIndicator
+                        HeightRequest="30"
+                        IsRunning="True"
+                        WidthRequest="30"
+                        Color="#464D77" />
+                    <Label
+                        FontFamily="Varela"
+                        Text="Looking for devices..."
+                        VerticalTextAlignment="Center" />
+                </StackLayout>
+                <Button
+                    BackgroundColor="#464D77"
+                    Command="{Binding ScanCommand}"
+                    FontFamily="Varela"
+                    FontSize="22"
+                    HeightRequest="50"
+                    HorizontalOptions="Center"
+                    IsVisible="{Binding IsScanningDevices, Converter={StaticResource InvertedBoolConverter}}"
+                    Text="Scan devices"
+                    TextColor="#F4EDED"
+                    VerticalOptions="Center"
+                    WidthRequest="300" />
+            </StackLayout>
+        </Frame>
+    </StackLayout>
+
 
 </ContentPage>

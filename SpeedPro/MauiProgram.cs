@@ -11,17 +11,21 @@ public static class MauiProgram
 		var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>()
+			.UseMauiCommunityToolkit()
 			.ConfigureFonts(fonts =>
 			{
-				fonts.AddFont("fa-solid-900.ttf", "fa-solid");
+				fonts.AddFont("fa.ttf", "fa");
+				fonts.AddFont("coolvetica.ttf", "coolvetica");
+				fonts.AddFont("VarelaRound-Regular.ttf", "Varela");
 			});
-		builder.UseMauiApp<App>().UseMauiCommunityToolkit();
-
 		builder.Services.AddSingleton<IBluetoothLEService, BluetoothLEService>();
 
 		builder.Services.AddSingleton<MainViewModel>();
 
 		builder.Services.AddSingleton<MainPage>();
+		builder.Services.AddSingleton<AppShell>();
+
+		Routing.RegisterRoute("home", typeof(MainPage));
 		return builder.Build();
 	}
 }

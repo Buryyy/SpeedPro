@@ -48,7 +48,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Models\" />
+	  <None Remove="Resources\Fonts\coolvetica.otf" />
+	  <None Remove="Resources\Fonts\fa.ttf" />
+	  <None Remove="Resources\Fonts\VarelaRound-Regular.ttf" />
+	  <None Remove="Resources\Images\bluetooth.png" />
+	  <None Remove="Resources\Images\riding_scooter.png" />
+	  <None Remove="Resources\Images\test.jpg" />
+	  <None Remove="Resources\Images\test.png" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <Folder Include="Platforms\Android\Bluetooth\" />
 	</ItemGroup>
 

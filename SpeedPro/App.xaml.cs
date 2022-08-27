@@ -1,11 +1,13 @@
-﻿namespace SpeedPro;
+﻿using SpeedPro.Helpers;
+
+namespace SpeedPro;
 
 public partial class App : Application
 {
 	public App()
 	{
 		InitializeComponent();
-
-		MainPage = new AppShell();
+		App.Current.UserAppTheme = AppTheme.Light;
+		MainPage = ServiceHelper.GetService<AppShell>();
 	}
 }
