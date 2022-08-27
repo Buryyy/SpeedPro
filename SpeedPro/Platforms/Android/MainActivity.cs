@@ -3,7 +3,9 @@ using Android.App;
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
+using Android.Views;
 using AndroidX.Core.App;
+using AndroidX.Core.View;
 using Activity = Android.App.Activity;
 
 namespace SpeedPro;
@@ -31,9 +33,22 @@ public class MainActivity : MauiAppCompatActivity
         Context = this;
         //RequestBlePermissions(this, 0);
         base.OnCreate(savedInstanceState);
+        SetStatusBarStyle();
+    }
+
+    private void SetStatusBarStyle()
+    {
+        Window.ClearFlags(WindowManagerFlags.TranslucentStatus);
+        Window.AddFlags(WindowManagerFlags.DrawsSystemBarBackgrounds);
+        Window.SetStatusBarColor(new Android.Graphics.Color(244, 237, 237));
+        Window.DecorView.SystemUiVisibility = (StatusBarVisibility)SystemUiFlags.LightNavigationBar;
+        Window.ClearFlags(Android.Views.WindowManagerFlags.TranslucentStatus);
 
 
-
+        if (Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.M)
+        {
+            WindowCompat.GetInsetsController(Window, Window.DecorView).AppearanceLightStatusBars = true;
+        }
     }
 
     public static bool IsBLEAccessGranted()

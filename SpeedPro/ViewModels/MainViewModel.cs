@@ -23,19 +23,30 @@ namespace SpeedPro.ViewModels
         private void OnDeviceDiscovered(object sender, DeviceEventArgs e)
         {
             string deviceName = string.IsNullOrEmpty(e.Device.Name) ? "Unnamed device" : e.Device.Name;
+
             ScannedDevices.Add(new BluetoothDevice(deviceName, e.Device));
+
+            if (!IsDeviceListVisible)
+            {
+                IsDeviceListVisible = true;
+            }
         }
 
         public ICommand ScanCommand => new RelayCommand(async () =>
         {
+            if (IsScanningDevices) return;
+            IsDeviceListVisible = false;
             IsScanningDevices = true;
+
             ScannedDevices.Clear();
             await _bluetoothLEService.ScanDevicesAsync();
+
             IsScanningDevices = false;
         });
 
         [ObservableProperty] bool isScanningDevices;
         [ObservableProperty] bool showScannedDevices;
+        [ObservableProperty] bool isDeviceListVisible;
         [ObservableProperty] ObservableCollection<BluetoothDevice> scannedDevices;
     }
 }

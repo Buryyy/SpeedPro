@@ -9,7 +9,7 @@
             <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
-    <StackLayout>
+    <StackLayout BackgroundColor="#F4EDED">
         <Grid Padding="0,40,0,0" VerticalOptions="Start">
             <Grid.RowDefinitions>
                 <RowDefinition Height="260" />
@@ -38,22 +38,21 @@
                     FontFamily="Varela"
                     FontSize="16"
                     HorizontalOptions="Center"
-                    Text="Before we start, let's connect to the device first."
+                    Text="Before we start, let's connect to the vehicle first."
                     TextColor="Black"
                     VerticalOptions="Center" />
             </StackLayout>
 
         </Grid>
-        <Frame
-            Grid.Row="2"
-            Margin="10"
-            Padding="22"
-            Background="white"
-            VerticalOptions="EndAndExpand">
-
-            <StackLayout>
+        <StackLayout Spacing="20" VerticalOptions="EndAndExpand">
+            <StackLayout IsVisible="{Binding IsDeviceListVisible}" VerticalOptions="End">
                 <ListView
-                    HasUnevenRows="True"
+                    Margin="5"
+                    BackgroundColor="#F4EDED"
+                    CachingStrategy="RecycleElementAndDataTemplate"
+                    HasUnevenRows="False"
+                    HeightRequest="220"
+                    IsPullToRefreshEnabled="False"
                     ItemsSource="{Binding ScannedDevices}"
                     SeparatorVisibility="None">
                     <ListView.ItemTemplate>
@@ -86,11 +85,17 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
+            </StackLayout>
+
+            <StackLayout Margin="0,0,0,20" Padding="0">
+
+
                 <StackLayout
                     Margin="10"
                     HorizontalOptions="Center"
                     IsVisible="{Binding IsScanningDevices}"
-                    Orientation="Horizontal">
+                    Orientation="Horizontal"
+                    Spacing="10">
                     <ActivityIndicator
                         HeightRequest="30"
                         IsRunning="True"
@@ -111,10 +116,10 @@
                     IsVisible="{Binding IsScanningDevices, Converter={StaticResource InvertedBoolConverter}}"
                     Text="Scan devices"
                     TextColor="#F4EDED"
-                    VerticalOptions="Center"
+                    VerticalOptions="End"
                     WidthRequest="300" />
             </StackLayout>
-        </Frame>
+        </StackLayout>
     </StackLayout>
 
 
