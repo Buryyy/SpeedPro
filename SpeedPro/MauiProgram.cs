@@ -18,7 +18,8 @@ public static class MauiProgram
 				fonts.AddFont("coolvetica.ttf", "coolvetica");
 				fonts.AddFont("VarelaRound-Regular.ttf", "Varela");
 			});
-		builder.Services.AddSingleton<IBluetoothLEService, BluetoothLEService>();
+		builder.Services.AddSingleton<IBluetoothLEService, BluetoothLEService>()
+		.AddSingleton<IVehicleCommsService, VehicleCommsService>();
 
 		builder.Services.AddSingleton<MainViewModel>();
 

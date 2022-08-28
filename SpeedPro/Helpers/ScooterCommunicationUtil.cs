@@ -3,7 +3,7 @@ using System.Text;
 
 namespace SpeedPro.Helpers
 {
-    public static class ScooterCommunicationUtil
+    public static class ScooterCommsUtil
     {
         public static readonly Guid CharactericsUUID_1 = Guid.Parse("00008888-0000-1000-8000-00805f9b34fb");
         public static readonly Guid CharactericsUUID_2 = Guid.Parse("00008877-0000-1000-8000-00805f9b34fb");
@@ -38,6 +38,7 @@ namespace SpeedPro.Helpers
         public const string WHEEL_6C = "FF551C010374";
         public const string WHEEL_6_5C = "FF551C010475";
         public const string WHEEL_8C = "FF551C010576";
+        public const string ConnectionNotify = "FF55010055)";
 
         public static byte[] HexStrToBytes(string hex)
         {

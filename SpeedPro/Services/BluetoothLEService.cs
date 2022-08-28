@@ -4,24 +4,30 @@ using Plugin.BLE.Abstractions.EventArgs;
 using Plugin.BLE.Abstractions.Exceptions;
 using SpeedPro.Helpers;
 using System.Diagnostics;
-
 namespace SpeedPro.Services
 {
     public class BluetoothLEService : IBluetoothLEService
     {
 
+        private readonly IVehicleCommsService _vehicleCommsService;
         private readonly IBluetoothLE _bluetooth;
         private readonly IAdapter _adapter;
 
         private IDevice _connectedDevice;
-
         private ValueTuple<ICharacteristic, ICharacteristic> _characteristicsPair;
+        private System.Timers.Timer _timer;
+        public event EventHandler<CharacteristicUpdatedEventArgs> CharacteristicsChanged;
 
         public BluetoothLEService()
         {
             _bluetooth = CrossBluetoothLE.Current;
             _adapter = CrossBluetoothLE.Current.Adapter;
             _bluetooth.StateChanged += OnConnectionStateChanged;
+        }
+
+        private void OnTimerElapsed(object state)
+        {
+            throw new NotImplementedException();
         }
 
         private void OnConnectionStateChanged(object sender, BluetoothStateChangedArgs e)
@@ -51,8 +57,8 @@ SpeedPro.MainActivity.RequestBlePermissions(SpeedPro.MainActivity.Activity, 0);
                 ICharacteristic char__2 = null;
                 foreach (var service in services)
                 {
-                    var characteristic__1 = await service.GetCharacteristicAsync(ScooterCommunicationUtil.CharactericsUUID_1);
-                    var characteristic__2 = await service.GetCharacteristicAsync(ScooterCommunicationUtil.CharactericsUUID_2);
+                    var characteristic__1 = await service.GetCharacteristicAsync(ScooterCommsUtil.CharactericsUUID_1);
+                    var characteristic__2 = await service.GetCharacteristicAsync(ScooterCommsUtil.CharactericsUUID_2);
 
                     if (characteristic__1 != null)
                     {
@@ -73,21 +79,9 @@ SpeedPro.MainActivity.RequestBlePermissions(SpeedPro.MainActivity.Activity, 0);
                 {
                     _connectedDevice = device;
                     _characteristicsPair = new ValueTuple<ICharacteristic, ICharacteristic>(char__1, char__2);
-                    /*  await Task.Run(async () =>
-                        {
-                            while (true)
-                            {
-                                int startMs = DateTime.UtcNow.Millisecond;
-                                var payload = ScooterCommunicationUtil.HexStrToBytes("FF55160200006C");
-                                var didWrite = await WriteAsync(payload);
-                                if (didWrite)
-                                {
-                                    Debug.WriteLine("Write payload to scooter successfully");
-                                }
-                                int elapsedMs = DateTime.UtcNow.Millisecond;
-                                await Task.Delay(600);
-                            }
-                        });*/
+                    await WriteAsync(ScooterCommsUtil.HexStrToBytes("FF55010055"));
+
+                    _timer.Start();
                     Debug.WriteLine("Found both characteristics");
                 }
                 return true;
@@ -100,7 +94,6 @@ SpeedPro.MainActivity.RequestBlePermissions(SpeedPro.MainActivity.Activity, 0);
 
         public async Task<bool> WriteAsync(byte[] payload)
         {
-
             return await _characteristicsPair.Item2.WriteAsync(payload);
         }
 
@@ -117,11 +110,22 @@ SpeedPro.MainActivity.RequestBlePermissions(SpeedPro.MainActivity.Activity, 0);
         private void OnCharacteristicChanged(object sender, CharacteristicUpdatedEventArgs e)
         {
             Debug.WriteLine("OnCharacteristicsChanged");
-            var hexStr_2 = ScooterCommunicationUtil.BytesToHexStr(e.Characteristic.Value, e.Characteristic.Value.Length);
-            bool isValid = ScooterCommunicationUtil.AnalyzedHex(hexStr_2) == Convert.ToInt32(hexStr_2.Substring(hexStr_2.Length - 2, hexStr_2.Length), 16);
+            var hexStr_2 = ScooterCommsUtil.BytesToHexStr(e.Characteristic.Value, e.Characteristic.Value.Length);
+            bool isValid = ScooterCommsUtil.AnalyzedHex(hexStr_2) == Convert.ToInt32(hexStr_2.Substring(hexStr_2.Length - 2, hexStr_2.Length), 16);
             if (isValid)
             {
                 Debug.WriteLine("Characteristic change is valid.");
+                CharacteristicsChanged.Invoke(this, e);
+            }
+            string substr = hexStr_2[..6];
+            int val = 65535;
+            if (substr.GetHashCode() == 2070318434 || substr.Equals("FF5502"))
+            {
+                val = 0;
+            }
+            if (val == 0)
+            {
+
             }
         }
 
